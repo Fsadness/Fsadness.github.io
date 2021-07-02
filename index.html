@@ -121,6 +121,77 @@
 
 
   
+    <article id="post-格式化路径" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/" class="article-date">
+  <time class="dt-published" datetime="2021-07-01T11:29:31.000Z" itemprop="datePublished">2021-07-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Exercise/">Exercise</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/">格式化路径</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>实现一个对输入的路径进行处理、并输出正确结果的程序。具体要求如下：</p>
+<ul>
+<li>所有输入中的<code>\</code>被当做<code>/</code>加以处理，且在输出中被转换为<code>/</code>。</li>
+<li>连续多个<code>/</code>被压缩成一个。</li>
+<li>输入中单独的<code>.</code>被直接删除。若为连续的<code>.</code>，则参考下面一条规则。</li>
+<li>输入中的<code>..</code>会导致<code>..</code>之前的一级目录被删去。然而如果输入中已经不存在父目录，则直接输出<code>Value Error</code>。保证不会出现<code>...</code>、<code>....</code>等不合法的情况。</li>
+<li><em>输入中保证不出现字母加<code>.</code>等情况。</em></li>
+<li>如果输入为空，或者所有父目录被删去，则根据下面的规则输出空串或<code>/</code>。<ul>
+<li>当且仅当输入以<code>/</code>开始（或以<code>\</code>开始）时，输出才以<code>/</code>开始。</li>
+<li>无论输入是否以<code>/</code>结尾，输出的结尾不带有<code>/</code>，除非输出是<code>/</code>。</li>
+</ul>
+</li>
+</ul>
+<p><em>使用之前学到的白盒测试和黑盒测试方法，尽量减少错误次数。能一次通过最好啦！</em></p>
+<p><em>你可以使用任意语言完成这道题目，点击代码编辑区右上角的下拉选项就可以选择使用的语言了。</em></p>
+<h3 id="输入格式"><a href="#输入格式" class="headerlink" title="输入格式"></a>输入格式</h3><p>输入$T(1 \leq T \leq 10)$行，每行为一个长度不超过$100$的字符串（包含字母、数字、<code>.</code>、<code>\</code>和<code>/</code>），表示输入的路径。</p>
+<h3 id="输出格式"><a href="#输出格式" class="headerlink" title="输出格式"></a>输出格式</h3><p>输出$T$行字符串，表示处理后的$T$个路径。</p>
+<h4 id="样例输入"><a href="#样例输入" class="headerlink" title="样例输入"></a>样例输入</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./jisuanke\\./suantou/../bin/</span><br><span class="line">..</span><br><span class="line">/\./\.\/.\/</span><br></pre></td></tr></table></figure>
+
+<h4 id="样例输出"><a href="#样例输出" class="headerlink" title="样例输出"></a>样例输出</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jisuanke/bin</span><br><span class="line">Value Error</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+
+<h3 id="标程"><a href="#标程" class="headerlink" title="标程"></a>标程</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctype.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">char</span> data[<span class="number">100</span>][<span class="number">100</span>];</span><br><span class="line">  <span class="keyword">int</span> top;</span><br><span class="line">&#125; Stack;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintError</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;<span class="built_in">printf</span>(<span class="string">&quot;Value Error\n&quot;</span>);&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">IsSlash</span><span class="params">(<span class="keyword">char</span> c)</span></span></span><br><span class="line"><span class="function"></span>&#123;<span class="keyword">return</span> c == <span class="string">&#x27;/&#x27;</span> || c == <span class="string">&#x27;\\&#x27;</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CutSlash</span><span class="params">(<span class="keyword">char</span> *str, <span class="keyword">int</span> *now)</span></span></span><br><span class="line"><span class="function"></span>&#123;<span class="keyword">for</span> (; IsSlash(str[*now]); ++(*now)) <span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">FindNextSlash</span><span class="params">(<span class="keyword">char</span> *str, <span class="keyword">int</span> now, <span class="keyword">int</span> *next)</span></span></span><br><span class="line"><span class="function"></span>&#123;<span class="keyword">for</span> (*next = now; !IsSlash(str[*next]); ++(*next)) <span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">IsDot</span><span class="params">(<span class="keyword">char</span> *str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (str[<span class="number">0</span>] == <span class="string">&#x27;.&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (str[<span class="number">1</span>] == <span class="string">&#x27;.&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> str[<span class="number">105</span>];</span><br><span class="line">  Stack s;</span><br><span class="line">  <span class="keyword">while</span> (gets(str) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    s.top = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> len = <span class="built_in">strlen</span>(str), now = <span class="number">0</span>, next = <span class="number">0</span>, isError = <span class="number">0</span>, slashBegin = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (IsSlash(str[<span class="number">0</span>])) &#123;</span><br><span class="line">      slashBegin = <span class="number">1</span>;</span><br><span class="line">      CutSlash(str,&amp;now);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (; now &lt; len &amp;&amp; !isError; CutSlash(str, &amp;now)) &#123;</span><br><span class="line">      <span class="keyword">int</span> dotType = IsDot(str+now);</span><br><span class="line">      <span class="keyword">if</span> (dotType) &#123;</span><br><span class="line">        <span class="keyword">if</span>(dotType == <span class="number">2</span>) &#123;</span><br><span class="line">          <span class="keyword">if</span>(s.top == <span class="number">0</span>) &#123;</span><br><span class="line">            isError = <span class="number">1</span>;</span><br><span class="line">            PrintError();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            --s.top;</span><br><span class="line">            now += <span class="number">2</span>;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++now;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        FindNextSlash(str, now, &amp;next);</span><br><span class="line">        <span class="built_in">strncpy</span>(s.data[++s.top], str+now, next - now);</span><br><span class="line">        s.data[s.top][next - now] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">        now = next;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(!isError) &#123;</span><br><span class="line">      <span class="keyword">if</span> (slashBegin) <span class="built_in">printf</span>(<span class="string">&quot;/&quot;</span>);</span><br><span class="line">      <span class="keyword">if</span> (s.top == <span class="number">0</span>) <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= s.top; ++i)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s%c&quot;</span>, s.data[i], i == s.top? <span class="string">&#x27;\n&#x27;</span>: <span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fsadness.github.io/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/" data-id="ckqlpreac00032mo3fcnk4t73" data-title="格式化路径" class="article-share-link">分享</a>
+      
+      
+        <a href="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/#comments" class="article-comment-link">
+          <span class="post-comments-count valine-comment-count" data-xid="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/" itemprop="commentCount"></span>
+          留言
+        </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/" rel="tag">stack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/string/" rel="tag">string</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Summer-training-notes-4" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2021/07/01/Summer-training-notes-4/" class="article-date">
@@ -187,77 +258,6 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github/" rel="tag">github</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/memory-leak/" rel="tag">memory leak</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/program-test/" rel="tag">program test</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-格式化路径" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/" class="article-date">
-  <time class="dt-published" datetime="2021-06-30T16:00:00.000Z" itemprop="datePublished">2021-07-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Exercise/">Exercise</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/">格式化路径</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>实现一个对输入的路径进行处理、并输出正确结果的程序。具体要求如下：</p>
-<ul>
-<li>所有输入中的<code>\</code>被当做<code>/</code>加以处理，且在输出中被转换为<code>/</code>。</li>
-<li>连续多个<code>/</code>被压缩成一个。</li>
-<li>输入中单独的<code>.</code>被直接删除。若为连续的<code>.</code>，则参考下面一条规则。</li>
-<li>输入中的<code>..</code>会导致<code>..</code>之前的一级目录被删去。然而如果输入中已经不存在父目录，则直接输出<code>Value Error</code>。保证不会出现<code>...</code>、<code>....</code>等不合法的情况。</li>
-<li><em>输入中保证不出现字母加<code>.</code>等情况。</em></li>
-<li>如果输入为空，或者所有父目录被删去，则根据下面的规则输出空串或<code>/</code>。<ul>
-<li>当且仅当输入以<code>/</code>开始（或以<code>\</code>开始）时，输出才以<code>/</code>开始。</li>
-<li>无论输入是否以<code>/</code>结尾，输出的结尾不带有<code>/</code>，除非输出是<code>/</code>。</li>
-</ul>
-</li>
-</ul>
-<p><em>使用之前学到的白盒测试和黑盒测试方法，尽量减少错误次数。能一次通过最好啦！</em></p>
-<p><em>你可以使用任意语言完成这道题目，点击代码编辑区右上角的下拉选项就可以选择使用的语言了。</em></p>
-<h3 id="输入格式"><a href="#输入格式" class="headerlink" title="输入格式"></a>输入格式</h3><p>输入$T(1 \leq T \leq 10)$行，每行为一个长度不超过$100$的字符串（包含字母、数字、<code>.</code>、<code>\</code>和<code>/</code>），表示输入的路径。</p>
-<h3 id="输出格式"><a href="#输出格式" class="headerlink" title="输出格式"></a>输出格式</h3><p>输出$T$行字符串，表示处理后的$T$个路径。</p>
-<h4 id="样例输入"><a href="#样例输入" class="headerlink" title="样例输入"></a>样例输入</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./jisuanke\\./suantou/../bin/</span><br><span class="line">..</span><br><span class="line">/\./\.\/.\/</span><br></pre></td></tr></table></figure>
-
-<h4 id="样例输出"><a href="#样例输出" class="headerlink" title="样例输出"></a>样例输出</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jisuanke/bin</span><br><span class="line">Value Error</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
-
-<h3 id="标程"><a href="#标程" class="headerlink" title="标程"></a>标程</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctype.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">char</span> data[<span class="number">100</span>][<span class="number">100</span>];</span><br><span class="line">  <span class="keyword">int</span> top;</span><br><span class="line">&#125; Stack;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintError</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;<span class="built_in">printf</span>(<span class="string">&quot;Value Error\n&quot;</span>);&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">IsSlash</span><span class="params">(<span class="keyword">char</span> c)</span></span></span><br><span class="line"><span class="function"></span>&#123;<span class="keyword">return</span> c == <span class="string">&#x27;/&#x27;</span> || c == <span class="string">&#x27;\\&#x27;</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CutSlash</span><span class="params">(<span class="keyword">char</span> *str, <span class="keyword">int</span> *now)</span></span></span><br><span class="line"><span class="function"></span>&#123;<span class="keyword">for</span> (; IsSlash(str[*now]); ++(*now)) <span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">FindNextSlash</span><span class="params">(<span class="keyword">char</span> *str, <span class="keyword">int</span> now, <span class="keyword">int</span> *next)</span></span></span><br><span class="line"><span class="function"></span>&#123;<span class="keyword">for</span> (*next = now; !IsSlash(str[*next]); ++(*next)) <span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">IsDot</span><span class="params">(<span class="keyword">char</span> *str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (str[<span class="number">0</span>] == <span class="string">&#x27;.&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (str[<span class="number">1</span>] == <span class="string">&#x27;.&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> str[<span class="number">105</span>];</span><br><span class="line">  Stack s;</span><br><span class="line">  <span class="keyword">while</span> (gets(str) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    s.top = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> len = <span class="built_in">strlen</span>(str), now = <span class="number">0</span>, next = <span class="number">0</span>, isError = <span class="number">0</span>, slashBegin = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (IsSlash(str[<span class="number">0</span>])) &#123;</span><br><span class="line">      slashBegin = <span class="number">1</span>;</span><br><span class="line">      CutSlash(str,&amp;now);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (; now &lt; len &amp;&amp; !isError; CutSlash(str, &amp;now)) &#123;</span><br><span class="line">      <span class="keyword">int</span> dotType = IsDot(str+now);</span><br><span class="line">      <span class="keyword">if</span> (dotType) &#123;</span><br><span class="line">        <span class="keyword">if</span>(dotType == <span class="number">2</span>) &#123;</span><br><span class="line">          <span class="keyword">if</span>(s.top == <span class="number">0</span>) &#123;</span><br><span class="line">            isError = <span class="number">1</span>;</span><br><span class="line">            PrintError();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            --s.top;</span><br><span class="line">            now += <span class="number">2</span>;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++now;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        FindNextSlash(str, now, &amp;next);</span><br><span class="line">        <span class="built_in">strncpy</span>(s.data[++s.top], str+now, next - now);</span><br><span class="line">        s.data[s.top][next - now] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">        now = next;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(!isError) &#123;</span><br><span class="line">      <span class="keyword">if</span> (slashBegin) <span class="built_in">printf</span>(<span class="string">&quot;/&quot;</span>);</span><br><span class="line">      <span class="keyword">if</span> (s.top == <span class="number">0</span>) <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= s.top; ++i)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s%c&quot;</span>, s.data[i], i == s.top? <span class="string">&#x27;\n&#x27;</span>: <span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://fsadness.github.io/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/" data-id="ckqlpreac00032mo3fcnk4t73" data-title="格式化路径" class="article-share-link">分享</a>
-      
-      
-        <a href="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/#comments" class="article-comment-link">
-          <span class="post-comments-count valine-comment-count" data-xid="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/" itemprop="commentCount"></span>
-          留言
-        </a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/stack/" rel="tag">stack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/string/" rel="tag">string</a></li></ul>
 
     </footer>
   </div>
@@ -554,6 +554,79 @@
 
 
   
+    <article id="post-Git实战" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/29/Git%E5%AE%9E%E6%88%98/" class="article-date">
+  <time class="dt-published" datetime="2021-06-29T04:00:00.000Z" itemprop="datePublished">2021-06-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Exercise/">Exercise</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/06/29/Git%E5%AE%9E%E6%88%98/">Git实战</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>通过这一章的学习，想必你已经掌握了 Git 的许多常用操作。接下来，你将要解决几个用 Git 操作完成的小任务。如果你可以完成这些任务，就标志着你真正地掌握了Git <strong>的常用操作</strong>。</p>
+<h2 id="任务说明"><a href="#任务说明" class="headerlink" title="任务说明"></a>任务说明</h2><h3 id="任务一"><a href="#任务一" class="headerlink" title="任务一"></a>任务一</h3><p>你现在应该能在目录中看到两个文本文件：<code>test.txt</code>和<code>input.txt</code>。现在，将<code>test.txt</code>加入<code>.gitignore</code>中，并将对<code>.gitignore</code>的修改提交到<code>master</code>分支（可以写上任意 commit message）。</p>
+<h3 id="任务二"><a href="#任务二" class="headerlink" title="任务二"></a>任务二</h3><p>本地仓库里有一个分支<code>back_branch</code>，将这个分支的最近一次提交删除。</p>
+<h3 id="任务三"><a href="#任务三" class="headerlink" title="任务三"></a>任务三</h3><p>从<code>master</code>建立一个分支<code>commit_branch</code>，将<code>input.txt</code>文件的第三行修改为<code>Hello Jisuanke!</code>，把这次修改合并到最近的一次提交中，并修改 commit message 为<code>&#39;merged message&#39;</code>。</p>
+<h3 id="任务四"><a href="#任务四" class="headerlink" title="任务四"></a>任务四</h3><p>将分支<code>conflict_branch</code>分支合并到<code>master</code>，发生冲突时均以<code>conflict_branch</code>为准，之后提交修改（可以写上任意 commit message）并删除<code>conflict_branch</code>分支。</p>
+<h2 id="判分说明"><a href="#判分说明" class="headerlink" title="判分说明"></a>判分说明</h2><p>题目共计$100$分，每个任务$25$分。只有当某个任务完全正确时，才能得到该任务的分数。</p>
+<h2 id="本地测试"><a href="#本地测试" class="headerlink" title="本地测试"></a>本地测试</h2><p>在<code>project</code>目录下执行<code>bash getgrade.sh</code>，即可在终端内看到测试的分数。</p>
+<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><p>在终端里编辑 commit message （默认使用 Vim 编辑）的方法如下：</p>
+<ol>
+<li>输入<code>:1</code>，跳转到第一行</li>
+<li>输入<code>i</code>，开启编辑模式</li>
+<li>编辑 commit message</li>
+<li>按<code>Esc</code>退出编辑模式</li>
+<li>输入<code>:wq</code>保存退出</li>
+</ol>
+<p>你可以拖动终端区域的上沿，以让这个区域的面积更大。</p>
+<h2 id="标程"><a href="#标程" class="headerlink" title="标程"></a>标程</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">➜  project git:(master) ✗ # Task 1      </span><br><span class="line">➜  project git:(master) ✗ git status</span><br><span class="line">On branch master</span><br><span class="line">Untracked files:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)</span><br><span class="line">        test.txt</span><br><span class="line"></span><br><span class="line">nothing added to commit but untracked files present (use &quot;git add&quot; to track)</span><br><span class="line">➜  project git:(master) ✗ vim .gitignore </span><br><span class="line">➜  project git:(master) ✗ git add .gitignore</span><br><span class="line">➜  project git:(master) ✗ git commit -m &quot;any commit message&quot;</span><br><span class="line">[master 777afe5] any commit message</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">➜  project git:(master) # Task 2</span><br><span class="line">➜  project git:(master) git checkout back_branch</span><br><span class="line">Switched to branch &#x27;back_branch&#x27;</span><br><span class="line">➜  project git:(back_branch) ✗ git log</span><br><span class="line">error: cannot run less: No such file or directory</span><br><span class="line">commit 4369765705fccc9ad701dfc43ad2720b4a53b92e (HEAD -&gt; back_branch)</span><br><span class="line">Author: memory-overflow &lt;893203990@qq.com&gt;</span><br><span class="line">Date:   Thu Sep 8 17:44:40 2016 +0800</span><br><span class="line"></span><br><span class="line">    delete a paragraph</span><br><span class="line"></span><br><span class="line">commit 34cb70ea60a7b59d75870036cf901683f07eaac5</span><br><span class="line">Author: memory-overflow &lt;893203990@qq.com&gt;</span><br><span class="line">Date:   Thu Sep 8 17:40:10 2016 +0800</span><br><span class="line"></span><br><span class="line">    add input.txt</span><br><span class="line"></span><br><span class="line">commit 15f1a756722bd4d9864c40afdfde5deee097ed9c</span><br><span class="line">Author: memory-overflow &lt;893203990@qq.com&gt;</span><br><span class="line">Date:   Thu Sep 8 17:39:51 2016 +0800</span><br><span class="line"></span><br><span class="line">    Init commit</span><br><span class="line">➜  project git:(back_branch) ✗ git reset --hard HEAD~</span><br><span class="line">HEAD is now at 34cb70e add input.txt</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">➜  project git:(back_branch) ✗ # Task 3</span><br><span class="line">➜  project git:(back_branch) ✗ git checkout master</span><br><span class="line">Switched to branch &#x27;master&#x27;</span><br><span class="line">➜  project git:(master) git checkout -b commit_branch</span><br><span class="line">Switched to a new branch &#x27;commit_branch&#x27;</span><br><span class="line">➜  project git:(commit_branch) vim input.txt</span><br><span class="line">➜  project git:(commit_branch) ✗ git add input.txt</span><br><span class="line">➜  project git:(commit_branch) ✗ git commit --amend</span><br><span class="line">[commit_branch c52e87f] merged message</span><br><span class="line"> Date: Tue Jun 29 20:09:10 2021 +0800</span><br><span class="line"> 2 files changed, 2 insertions(+), 1 deletion(-)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜  project git:(commit_branch) # Task 4</span><br><span class="line">➜  project git:(commit_branch) git checkout master</span><br><span class="line">Switched to branch &#x27;master&#x27;</span><br><span class="line">➜  project git:(master) git merge conflict_branch</span><br><span class="line">Auto-merging input.txt</span><br><span class="line">CONFLICT (content): Merge conflict in input.txt</span><br><span class="line">Automatic merge failed; fix conflicts and then commit the result.</span><br><span class="line">➜  project git:(master) ✗ vim input.txt</span><br><span class="line">➜  project git:(master) ✗ git add input.txt        </span><br><span class="line">➜  project git:(master) ✗ git commit -m &quot;any commit message&quot;</span><br><span class="line">[master 4167cd2] any commit message</span><br><span class="line">➜  project git:(master) git branch -d conflict_branch </span><br><span class="line">Deleted branch conflict_branch (was 6165b38).</span><br><span class="line">➜  project git:(master) </span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fsadness.github.io/2021/06/29/Git%E5%AE%9E%E6%88%98/" data-id="ckqlprea900012mo3a22032i6" data-title="Git实战" class="article-share-link">分享</a>
+      
+      
+        <a href="/2021/06/29/Git%E5%AE%9E%E6%88%98/#comments" class="article-comment-link">
+          <span class="post-comments-count valine-comment-count" data-xid="/2021/06/29/Git%E5%AE%9E%E6%88%98/" itemprop="commentCount"></span>
+          留言
+        </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/" rel="tag">git</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Summer-training-notes-2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2021/06/29/Summer-training-notes-2/" class="article-date">
@@ -644,79 +717,6 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/" rel="tag">git</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Git实战" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/06/29/Git%E5%AE%9E%E6%88%98/" class="article-date">
-  <time class="dt-published" datetime="2021-06-28T16:00:00.000Z" itemprop="datePublished">2021-06-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Exercise/">Exercise</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/06/29/Git%E5%AE%9E%E6%88%98/">Git实战</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>通过这一章的学习，想必你已经掌握了 Git 的许多常用操作。接下来，你将要解决几个用 Git 操作完成的小任务。如果你可以完成这些任务，就标志着你真正地掌握了Git <strong>的常用操作</strong>。</p>
-<h2 id="任务说明"><a href="#任务说明" class="headerlink" title="任务说明"></a>任务说明</h2><h3 id="任务一"><a href="#任务一" class="headerlink" title="任务一"></a>任务一</h3><p>你现在应该能在目录中看到两个文本文件：<code>test.txt</code>和<code>input.txt</code>。现在，将<code>test.txt</code>加入<code>.gitignore</code>中，并将对<code>.gitignore</code>的修改提交到<code>master</code>分支（可以写上任意 commit message）。</p>
-<h3 id="任务二"><a href="#任务二" class="headerlink" title="任务二"></a>任务二</h3><p>本地仓库里有一个分支<code>back_branch</code>，将这个分支的最近一次提交删除。</p>
-<h3 id="任务三"><a href="#任务三" class="headerlink" title="任务三"></a>任务三</h3><p>从<code>master</code>建立一个分支<code>commit_branch</code>，将<code>input.txt</code>文件的第三行修改为<code>Hello Jisuanke!</code>，把这次修改合并到最近的一次提交中，并修改 commit message 为<code>&#39;merged message&#39;</code>。</p>
-<h3 id="任务四"><a href="#任务四" class="headerlink" title="任务四"></a>任务四</h3><p>将分支<code>conflict_branch</code>分支合并到<code>master</code>，发生冲突时均以<code>conflict_branch</code>为准，之后提交修改（可以写上任意 commit message）并删除<code>conflict_branch</code>分支。</p>
-<h2 id="判分说明"><a href="#判分说明" class="headerlink" title="判分说明"></a>判分说明</h2><p>题目共计$100$分，每个任务$25$分。只有当某个任务完全正确时，才能得到该任务的分数。</p>
-<h2 id="本地测试"><a href="#本地测试" class="headerlink" title="本地测试"></a>本地测试</h2><p>在<code>project</code>目录下执行<code>bash getgrade.sh</code>，即可在终端内看到测试的分数。</p>
-<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><p>在终端里编辑 commit message （默认使用 Vim 编辑）的方法如下：</p>
-<ol>
-<li>输入<code>:1</code>，跳转到第一行</li>
-<li>输入<code>i</code>，开启编辑模式</li>
-<li>编辑 commit message</li>
-<li>按<code>Esc</code>退出编辑模式</li>
-<li>输入<code>:wq</code>保存退出</li>
-</ol>
-<p>你可以拖动终端区域的上沿，以让这个区域的面积更大。</p>
-<h2 id="标程"><a href="#标程" class="headerlink" title="标程"></a>标程</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">➜  project git:(master) ✗ # Task 1      </span><br><span class="line">➜  project git:(master) ✗ git status</span><br><span class="line">On branch master</span><br><span class="line">Untracked files:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)</span><br><span class="line">        test.txt</span><br><span class="line"></span><br><span class="line">nothing added to commit but untracked files present (use &quot;git add&quot; to track)</span><br><span class="line">➜  project git:(master) ✗ vim .gitignore </span><br><span class="line">➜  project git:(master) ✗ git add .gitignore</span><br><span class="line">➜  project git:(master) ✗ git commit -m &quot;any commit message&quot;</span><br><span class="line">[master 777afe5] any commit message</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">➜  project git:(master) # Task 2</span><br><span class="line">➜  project git:(master) git checkout back_branch</span><br><span class="line">Switched to branch &#x27;back_branch&#x27;</span><br><span class="line">➜  project git:(back_branch) ✗ git log</span><br><span class="line">error: cannot run less: No such file or directory</span><br><span class="line">commit 4369765705fccc9ad701dfc43ad2720b4a53b92e (HEAD -&gt; back_branch)</span><br><span class="line">Author: memory-overflow &lt;893203990@qq.com&gt;</span><br><span class="line">Date:   Thu Sep 8 17:44:40 2016 +0800</span><br><span class="line"></span><br><span class="line">    delete a paragraph</span><br><span class="line"></span><br><span class="line">commit 34cb70ea60a7b59d75870036cf901683f07eaac5</span><br><span class="line">Author: memory-overflow &lt;893203990@qq.com&gt;</span><br><span class="line">Date:   Thu Sep 8 17:40:10 2016 +0800</span><br><span class="line"></span><br><span class="line">    add input.txt</span><br><span class="line"></span><br><span class="line">commit 15f1a756722bd4d9864c40afdfde5deee097ed9c</span><br><span class="line">Author: memory-overflow &lt;893203990@qq.com&gt;</span><br><span class="line">Date:   Thu Sep 8 17:39:51 2016 +0800</span><br><span class="line"></span><br><span class="line">    Init commit</span><br><span class="line">➜  project git:(back_branch) ✗ git reset --hard HEAD~</span><br><span class="line">HEAD is now at 34cb70e add input.txt</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">➜  project git:(back_branch) ✗ # Task 3</span><br><span class="line">➜  project git:(back_branch) ✗ git checkout master</span><br><span class="line">Switched to branch &#x27;master&#x27;</span><br><span class="line">➜  project git:(master) git checkout -b commit_branch</span><br><span class="line">Switched to a new branch &#x27;commit_branch&#x27;</span><br><span class="line">➜  project git:(commit_branch) vim input.txt</span><br><span class="line">➜  project git:(commit_branch) ✗ git add input.txt</span><br><span class="line">➜  project git:(commit_branch) ✗ git commit --amend</span><br><span class="line">[commit_branch c52e87f] merged message</span><br><span class="line"> Date: Tue Jun 29 20:09:10 2021 +0800</span><br><span class="line"> 2 files changed, 2 insertions(+), 1 deletion(-)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜  project git:(commit_branch) # Task 4</span><br><span class="line">➜  project git:(commit_branch) git checkout master</span><br><span class="line">Switched to branch &#x27;master&#x27;</span><br><span class="line">➜  project git:(master) git merge conflict_branch</span><br><span class="line">Auto-merging input.txt</span><br><span class="line">CONFLICT (content): Merge conflict in input.txt</span><br><span class="line">Automatic merge failed; fix conflicts and then commit the result.</span><br><span class="line">➜  project git:(master) ✗ vim input.txt</span><br><span class="line">➜  project git:(master) ✗ git add input.txt        </span><br><span class="line">➜  project git:(master) ✗ git commit -m &quot;any commit message&quot;</span><br><span class="line">[master 4167cd2] any commit message</span><br><span class="line">➜  project git:(master) git branch -d conflict_branch </span><br><span class="line">Deleted branch conflict_branch (was 6165b38).</span><br><span class="line">➜  project git:(master) </span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://fsadness.github.io/2021/06/29/Git%E5%AE%9E%E6%88%98/" data-id="ckqlprea900012mo3a22032i6" data-title="Git实战" class="article-share-link">分享</a>
-      
-      
-        <a href="/2021/06/29/Git%E5%AE%9E%E6%88%98/#comments" class="article-comment-link">
-          <span class="post-comments-count valine-comment-count" data-xid="/2021/06/29/Git%E5%AE%9E%E6%88%98/" itemprop="commentCount"></span>
-          留言
-        </a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/" rel="tag">git</a></li></ul>
 
     </footer>
   </div>
@@ -983,11 +983,11 @@
           </li>
         
           <li>
-            <a href="/2021/07/01/Summer-training-notes-4/">Summer training notes 4</a>
+            <a href="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/">格式化路径</a>
           </li>
         
           <li>
-            <a href="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/">格式化路径</a>
+            <a href="/2021/07/01/Summer-training-notes-4/">Summer training notes 4</a>
           </li>
         
           <li>
@@ -995,7 +995,7 @@
           </li>
         
           <li>
-            <a href="/2021/06/29/Summer-training-notes-2/">Summer training notes 2</a>
+            <a href="/2021/06/29/Git%E5%AE%9E%E6%88%98/">Git实战</a>
           </li>
         
       </ul>
