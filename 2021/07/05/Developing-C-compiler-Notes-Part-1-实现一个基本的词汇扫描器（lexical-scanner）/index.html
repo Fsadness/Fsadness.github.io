@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Developing C compiler Notes Part 1 实现一个基本的词汇扫描器（lexical scanner） | Fsadness&#39; Personal Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Fsadness&#39; Personal Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Developing-C-compiler-Notes-Part-1-实现一个基本的词汇扫描器（lexical-scanner）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/07/05/Developing-C-compiler-Notes-Part-1-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%9A%84%E8%AF%8D%E6%B1%87%E6%89%AB%E6%8F%8F%E5%99%A8%EF%BC%88lexical-scanner%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2021-07-05T01:25:18.000Z" itemprop="datePublished">2021-07-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Develop/">Develop</a>►<a class="article-category-link" href="/categories/Develop/Developing-C-compiler/">Developing C compiler</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Developing C compiler Notes Part 1 实现一个基本的词汇扫描器（lexical scanner）
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Part-1-实现一个基本的词汇扫描器（lexical-scanner）"><a href="#Part-1-实现一个基本的词汇扫描器（lexical-scanner）" class="headerlink" title="Part 1 实现一个基本的词汇扫描器（lexical scanner）"></a>Part 1 实现一个基本的词汇扫描器（lexical scanner）</h2><p>Readme in English is <strong>[Here](<a target="_blank" rel="noopener" href="https://github.com/DoctorWkt/acwj/blob/master/01_Scanner/Readme.md">acwj/Readme.md at master · DoctorWkt/acwj (github.com)</a>)</strong>.（这里是英文版本的<code>Readme</code>）</p>
+<p>You can also see my repository <strong>[Here](<a target="_blank" rel="noopener" href="https://github.com/Fsadness/Developing_C_compiler">Fsadness/Developing_C_compiler: A developing C-subset compiler, tutorials are from https://github.com/DoctorWkt/acwj</a>)</strong>.（这里是我的代码库）</p>
+<h3 id="英汉翻译"><a href="#英汉翻译" class="headerlink" title="英汉翻译"></a>英汉翻译</h3><table>
+<thead>
+<tr>
+<th>English words</th>
+<th>汉语含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lexical scanner</td>
+<td>词汇扫描器</td>
+</tr>
+<tr>
+<td>lexical elements</td>
+<td>词汇成分</td>
+</tr>
+<tr>
+<td>token</td>
+<td>令牌</td>
+</tr>
+</tbody></table>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>实现一个基本的词汇扫描器，它能够读取文件，识别并存储其中的有效字符（当前仅考虑<code>+</code>、<code>-</code>、<code>*</code>、<code>/</code>四个基本运算符号以及十进制数字<code>0~9</code>）</p>
+<h3 id="Tokens定义"><a href="#Tokens定义" class="headerlink" title="Tokens定义"></a>Tokens定义</h3><p>定义一个<code>token</code>结构体，用于存储每一个词汇成分。其中，当<code>token == kIntenger</code>（即当前结构体存储元素为一个整数）时，<code>Int_value</code>存储该整数的值。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Token</span> &#123;</span></span><br><span class="line">  <span class="keyword">int</span> token;</span><br><span class="line">  <span class="keyword">int</span> int_value;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">  kPlus, kMinus, kStar, kSlash, kIntenger</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取文件中的下一个字符"><a href="#获取文件中的下一个字符" class="headerlink" title="获取文件中的下一个字符"></a>获取文件中的下一个字符</h3><p>声明一个函数<code>next()</code>，在每次声明的时候返回文件的下一个字符值。同时，为方便后续的<strong>错误定位</strong>，同时确定当前字符所在的行号（此处使用全局变量定义）。</p>
+<ul>
+<li>要点：对于某些需要持续读入字符直至循环条件终止时跳出的函数，可能会出现<strong>使循环条件终止的字符被抛弃</strong>的情况。因此需要采用一个全局变量避免<strong>字符丢失</strong>。</li>
+</ul>
+<h3 id="跳过空白字符"><a href="#跳过空白字符" class="headerlink" title="跳过空白字符"></a>跳过空白字符</h3><p>在读取文件时，对于无意义的空白字符选择忽略<del>(又不是什么<code>brainfuck</code>)</del>，直至获取一个<strong>可打印字符</strong>为止。</p>
+<h3 id="文件扫描函数scan"><a href="#文件扫描函数scan" class="headerlink" title="文件扫描函数scan()"></a>文件扫描函数<code>scan()</code></h3><p>函数传入token指针格式的参数，使用<code>switch</code>结构扫描字符以确定token类型。如果遇到<code>EOF</code>则返回<code>0</code>说明文件结尾（否则返回1继续进行扫描循环）</p>
+<h4 id="对整数的读取"><a href="#对整数的读取" class="headerlink" title="对整数的读取"></a>对整数的读取</h4><p>在读取的时候使用<code>strchr()</code>函数，通过确定字符在字符串<code>&quot;0123456789&quot;</code>中的位置，并返回以读取字符<code>&#39;0&#39;~&#39;9&#39;</code>的值。</p>
+<ul>
+<li>要点：这里采用的方法虽然相较于<code>c - &#39;0&#39;</code>速度更慢，但可以通过延长比较字符串<code>&quot;0123456789ABCDEF&quot;</code>的方式更为便捷地实现对十六进制整数地支持。</li>
+</ul>
+<h3 id="主函数"><a href="#主函数" class="headerlink" title="主函数"></a>主函数</h3><p>使用<strong>命令行参数</strong>实现对文件的“编译”（当前仅仅实现了文本的读取）</p>
+<p>（这里添加了一个测试函数检测扫描函数是否正常运行）</p>
+<h3 id="文件树"><a href="#文件树" class="headerlink" title="文件树"></a>文件树</h3><p>（方便理解代码）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">main.c</span><br><span class="line">+-extern_data.h</span><br><span class="line">+-token_defines.h</span><br><span class="line">+-functiom_defines.h</span><br><span class="line">	+-function_scan.c</span><br><span class="line"></span><br><span class="line">Makefile</span><br><span class="line">scanner</span><br><span class="line">+-main.o</span><br><span class="line">	+-function_scan.o</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fsadness.github.io/2021/07/05/Developing-C-compiler-Notes-Part-1-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%9A%84%E8%AF%8D%E6%B1%87%E6%89%AB%E6%8F%8F%E5%99%A8%EF%BC%88lexical-scanner%EF%BC%89/" data-id="ckqpy3kk30000yuo32fccc2kd" data-title="Developing C compiler Notes Part 1 实现一个基本的词汇扫描器（lexical scanner）" class="article-share-link">分享</a>
+      
+      
+        <a href="/2021/07/05/Developing-C-compiler-Notes-Part-1-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%9A%84%E8%AF%8D%E6%B1%87%E6%89%AB%E6%8F%8F%E5%99%A8%EF%BC%88lexical-scanner%EF%BC%89/#comments" class="article-comment-link">
+          <span class="post-comments-count valine-comment-count" data-xid="/2021/07/05/Developing-C-compiler-Notes-Part-1-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%9A%84%E8%AF%8D%E6%B1%87%E6%89%AB%E6%8F%8F%E5%99%A8%EF%BC%88lexical-scanner%EF%BC%89/" itemprop="commentCount"></span>
+          留言
+        </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/complier/" rel="tag">complier</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2021/07/03/%E8%AE%B2%E5%BA%A7%EF%BC%9A%E5%B7%A5%E7%A8%8B%E5%B8%88%E3%80%81%E5%BC%80%E6%BA%90%E4%B8%8E%E5%88%9B%E4%B8%9A/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">讲座：工程师、开源与创业</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+  <section id="comments" class="vcomment">
+
+  </section>
+</section>
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Time-complexity/" rel="tag">Time complexity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code-style/" rel="tag">code style</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/complier/" rel="tag">complier</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/debug/" rel="tag">debug</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/" rel="tag">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linked-list/" rel="tag">linked list</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory-leak/" rel="tag">memory leak</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program-test/" rel="tag">program test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/" rel="tag">queue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/stack/" rel="tag">stack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/string/" rel="tag">string</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/05/Developing-C-compiler-Notes-Part-1-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%9A%84%E8%AF%8D%E6%B1%87%E6%89%AB%E6%8F%8F%E5%99%A8%EF%BC%88lexical-scanner%EF%BC%89/">Developing C compiler Notes Part 1 实现一个基本的词汇扫描器（lexical scanner）</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/03/%E8%AE%B2%E5%BA%A7%EF%BC%9A%E5%B7%A5%E7%A8%8B%E5%B8%88%E3%80%81%E5%BC%80%E6%BA%90%E4%B8%8E%E5%88%9B%E4%B8%9A/">讲座：工程师、开源与创业</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/03/Summer-training-notes-6/">Summer training notes 6</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/02/Summer-training-notes-5/">Summer training notes 5</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/01/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%B7%AF%E5%BE%84/">格式化路径</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Develop/">Develop</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Develop/Developing-C-compiler/">Developing C compiler</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Exercise/">Exercise</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Lecture/">Lecture</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Study-notes/">Study notes</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Study-notes/Summer-training/">Summer training</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 By Autoload<br>
+      Driven - <a href="https://hexo.io/" target="_blank">Hexo</a>|Theme - <a href="https://github.com/autoload/hexo-theme-auto" target="_blank">Auto</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script>
+
+<script>
+    var GUEST_INFO = ['nick','mail','link'];
+    var guest_info = 'nick'.split(',').filter(function(item){
+        return GUEST_INFO.indexOf(item) > -1
+    });
+    var notify = 'false' == true;
+    var verify = 'false' == true;
+    new Valine({
+        el: '.vcomment',
+        notify: notify,
+        verify: verify,
+        appId: "jyhd42iUlEV2Pfbt61XjYl2G-gzGzoHsz",
+        appKey: "M3qQGorkhUV2m2uR8Pghg5D3",
+        placeholder: "Just go go",
+        pageSize:'10',
+        avatar:'mm',
+        lang:'zh-cn'
+    });
+</script>
+
+  </div>
+</body>
+</html>
